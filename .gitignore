@@ -1,11 +1,15 @@
+# Eclipse workspace settings - DO NOT TRACK
+.metadata/
+
 # Ignore node modules
 /frontend/node_modules
 /frontend/build
 
 # Ignore backend build artifacts
 /backend/target
+# VS Code files
+.vscode/
 
 # Ignore logs and environment files
 *.log
-.DS_Store
 *.env
