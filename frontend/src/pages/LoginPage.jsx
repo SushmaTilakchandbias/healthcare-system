@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './LoginPage.css';
+import { login } from '../services/authService';
+import { getUserRoleFromToken } from '../services/jwt';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -20,14 +21,14 @@ const LoginPage = () => {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:8080/auth/login', formData);
-      const token = response.data.token;
+      await login(formData.username, formData.password);
+      const role = getUserRoleFromToken();
 
-      // Save token to localStorage
-      localStorage.setItem('token', token);
-
-      // Redirect to dashboard
-      navigate('/dashboard');
+      // Redirect based on role
+      if (role === 'ADMIN') navigate('/admin');
+      else if (role === 'DOCTOR') navigate('/doctor');
+      else if (role === 'PATIENT') navigate('/patient');
+      else navigate('/');
     } catch (err) {
       console.error(err);
       setError('Invalid credentials. Please try again.');
@@ -58,6 +59,11 @@ const LoginPage = () => {
       </form>
 
       {error && <p className="error-message">{error}</p>}
+
+      {/* ✅ Sign-up link goes here inside the return */}
+      <p style={{ marginTop: '10px' }}>
+        Don't have an account? <Link to="/signup">Sign up</Link>
+      </p>
     </div>
   );
 };
