@@ -10,18 +10,20 @@ const PatientDashboard = () => {
   useEffect(() => {
     const fetchDashboard = async () => {
       const userId = getUserIdFromToken();
+      console.log('🧪 Extracted userId from token:', userId);
 
       if (!userId) {
-        setError('User ID not found. Please login again.');
+        setError('Invalid or missing user ID');
         setLoading(false);
         return;
       }
 
       try {
-        const response = await API.get(`/patient/${userId}/dashboard`);
-        setDashboardData(response.data);
+        const res = await API.get(`/patient/${userId}/dashboard`);
+        console.log('✅ Dashboard data:', res.data);
+        setDashboardData(res.data);
       } catch (err) {
-        console.error('Dashboard fetch error:', err);
+        console.error('❌ Dashboard fetch error:', err.response || err.message);
         setError('Failed to load dashboard.');
       } finally {
         setLoading(false);
@@ -39,7 +41,7 @@ const PatientDashboard = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h2>Welcome, {patient?.user?.firstName || 'Patient'}!</h2>
+      <h2>Welcome, {patient?.user?.firstName || patient?.user?.username || 'Patient'}!</h2>
 
       <section>
         <h3>Patient Details</h3>
@@ -55,47 +57,41 @@ const PatientDashboard = () => {
 
       <section>
         <h3>Appointments</h3>
-        {appointments.length > 0 ? (
+        {appointments?.length > 0 ? (
           <ul>
-            {appointments.map(appt => (
+            {appointments.map((appt) => (
               <li key={appt.appointmentId}>
-                {appt.appointmentDate} at {appt.appointmentTime} with Doctor ID: {appt.doctor?.id} ({appt.status})
+                {appt.appointmentDate} at {appt.appointmentTime} with Doctor ID: {appt.doctor?.id || 'N/A'} ({appt.status})
               </li>
             ))}
           </ul>
-        ) : (
-          <p>No appointments found.</p>
-        )}
+        ) : <p>No appointments found.</p>}
       </section>
 
       <section>
         <h3>Prescriptions</h3>
-        {prescriptions.length > 0 ? (
+        {prescriptions?.length > 0 ? (
           <ul>
-            {prescriptions.map(pres => (
+            {prescriptions.map((pres) => (
               <li key={pres.prescriptionId}>
                 {pres.prescriptionDate}: {pres.medicationName} ({pres.dosage})
               </li>
             ))}
           </ul>
-        ) : (
-          <p>No prescriptions found.</p>
-        )}
+        ) : <p>No prescriptions found.</p>}
       </section>
 
       <section>
         <h3>Medical Records</h3>
-        {records.length > 0 ? (
+        {records?.length > 0 ? (
           <ul>
-            {records.map(rec => (
+            {records.map((rec) => (
               <li key={rec.recordId}>
                 [{rec.recordType}] {rec.title}: {rec.description}
               </li>
             ))}
           </ul>
-        ) : (
-          <p>No medical records found.</p>
-        )}
+        ) : <p>No medical records found.</p>}
       </section>
     </div>
   );
