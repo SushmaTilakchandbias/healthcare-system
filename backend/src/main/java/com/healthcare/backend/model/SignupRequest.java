@@ -6,6 +6,14 @@ public class SignupRequest {
     private String email;
     private String phoneNumber;
     private String role;
+    private String dateOfBirth; // Format: yyyy-MM-dd
+    private String gender;
+    private String bloodGroup;
+    private String emergencyContactName;
+    private String emergencyContactNumber;
+    private String medicalHistorySummary;
+    private String allergies;
+    
 	public String getUsername() {
 		return username;
 	}
@@ -36,7 +44,48 @@ public class SignupRequest {
 	public void setRole(String role) {
 		this.role = role;
 	}
+	public String getDateOfBirth() {
+		return dateOfBirth;
+	}
+	public void setDateOfBirth(String dateOfBirth) {
+		this.dateOfBirth = dateOfBirth;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	public String getBloodGroup() {
+		return bloodGroup;
+	}
+	public void setBloodGroup(String bloodGroup) {
+		this.bloodGroup = bloodGroup;
+	}
+	public String getEmergencyContactName() {
+		return emergencyContactName;
+	}
+	public void setEmergencyContactName(String emergencyContactName) {
+		this.emergencyContactName = emergencyContactName;
+	}
+	public String getEmergencyContactNumber() {
+		return emergencyContactNumber;
+	}
+	public void setEmergencyContactNumber(String emergencyContactNumber) {
+		this.emergencyContactNumber = emergencyContactNumber;
+	}
+	public String getMedicalHistorySummary() {
+		return medicalHistorySummary;
+	}
+	public void setMedicalHistorySummary(String medicalHistorySummary) {
+		this.medicalHistorySummary = medicalHistorySummary;
+	}
+	public String getAllergies() {
+		return allergies;
+	}
+	public void setAllergies(String allergies) {
+		this.allergies = allergies;
+	}
 
     
-    // Getters & Setters
 }

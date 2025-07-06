@@ -1,5 +1,7 @@
 package com.healthcare.backend.controller;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,8 @@ import com.healthcare.backend.model.User;
 import com.healthcare.backend.repository.UserRepository;
 import com.healthcare.backend.security.JwtUtil;
 import com.healthcare.backend.service.UserDetailsServiceImpl;
+import com.healthcare.backend.repository.PatientRepository;
+import com.healthcare.backend.model.Patient;
 
 @RestController
 @RequestMapping("/auth")
@@ -35,6 +39,8 @@ public class AuthController {
 
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private PatientRepository patientRepository;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -60,14 +66,31 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Username already exists");
         }
 
+        // Create and save the User
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
+        user.setRole(request.getRole().toUpperCase());
         user.setEmail(request.getEmail());
         user.setPhoneNumber(request.getPhoneNumber());
 
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        // Create and save Patient details if role is PATIENT
+        if ("PATIENT".equalsIgnoreCase(savedUser.getRole())) {
+            Patient patient = new Patient();
+            patient.setUser(savedUser);
+            patient.setDateOfBirth(LocalDate.parse(request.getDateOfBirth())); // Format: yyyy-MM-dd
+            patient.setGender(request.getGender());
+            patient.setBloodGroup(request.getBloodGroup());
+            patient.setEmergencyContactName(request.getEmergencyContactName());
+            patient.setEmergencyContactNumber(request.getEmergencyContactNumber());
+            patient.setMedicalHistorySummary(request.getMedicalHistorySummary());
+            patient.setAllergies(request.getAllergies());
+
+            patientRepository.save(patient);
+        }
+
         return ResponseEntity.ok("User registered successfully");
     }
 

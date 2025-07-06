@@ -19,8 +19,11 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private Key key;
+    private final Key key;
     private final UserRepository userRepository;
+
+    @Value("${app.jwtExpirationMs}")
+    private int jwtExpirationMs;
 
     @Autowired
     public JwtUtil(@Value("${app.jwtSecret}") String secret, UserRepository userRepository) {
@@ -29,13 +32,13 @@ public class JwtUtil {
         this.userRepository = userRepository;
     }
 
-    @Value("${app.jwtExpirationMs}")
-    private int jwtExpirationMs;
-
     public String generateToken(UserDetails userDetails) {
-        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(userDetails.getUsername())
+                                  .orElseThrow(() -> new RuntimeException("User not found"));
+
         return Jwts.builder()
-                .setSubject(user.getUsername())
+                .setSubject(String.valueOf(user.getId())) // ✅ Store user ID in "sub"
+                .claim("username", user.getUsername())
                 .claim("role", user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
@@ -43,24 +46,28 @@ public class JwtUtil {
                 .compact();
     }
 
-    // Extract username from token
     public String extractUsername(String token) {
-        return parseClaims(token).getBody().getSubject();
+        return parseClaims(token).getBody().get("username", String.class);
     }
 
-    // Validate token
+    public String extractUserId(String token) {
+        return parseClaims(token).getBody().getSubject(); // "sub" claim = user ID
+    }
+
+    public String extractRole(String token) {
+        return parseClaims(token).getBody().get("role", String.class);
+    }
+
     public boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-    // Check if token is expired
     private boolean isTokenExpired(String token) {
         final Date expiration = parseClaims(token).getBody().getExpiration();
         return expiration.before(new Date());
     }
 
-    // Parse claims
     private Jws<Claims> parseClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
