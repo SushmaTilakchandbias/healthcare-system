@@ -1,15 +1,19 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getUserRoleFromToken } from '../services/jwt';
 
 const DashboardSelector = () => {
-  const role = getUserRoleFromToken();
+  const navigate = useNavigate();
 
-  if (role === 'ADMIN') return <Navigate to="/admin/dashboard" />;
-  if (role === 'DOCTOR') return <Navigate to="/doctor/dashboard" />;
-  if (role === 'PATIENT') return <Navigate to="/patient/dashboard" />;
+  useEffect(() => {
+    const role = getUserRoleFromToken();
+    if (role === 'ADMIN') navigate('/admin/dashboard');
+    else if (role === 'DOCTOR') navigate('/doctor/dashboard');
+    else if (role === 'PATIENT') navigate('/patient/dashboard');
+    else navigate('/login');
+  }, [navigate]);
 
-  return <Navigate to="/login" />;
+  return <div>Redirecting...</div>;
 };
 
 export default DashboardSelector;

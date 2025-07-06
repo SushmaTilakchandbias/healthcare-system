@@ -2,7 +2,7 @@ import API from './api';
 
 const TOKEN_KEY = 'token';
 
-// Login and store token
+// ✅ Login: Send credentials to backend, store JWT token
 export const login = async (username, password) => {
   try {
     const response = await API.post('/auth/login', { username, password });
@@ -14,21 +14,35 @@ export const login = async (username, password) => {
 
     return token;
   } catch (error) {
-    throw error;
+    throw new Error('Login failed: ' + error.response?.data || error.message);
   }
 };
 
-// Logout: Remove token from storage
+// ✅ Logout: Remove token from localStorage
 export const logout = () => {
   localStorage.removeItem(TOKEN_KEY);
 };
 
-// Get token from local storage
+// ✅ Retrieve token from localStorage
 export const getToken = () => {
   return localStorage.getItem(TOKEN_KEY);
 };
 
-// Check if user is authenticated
+// ✅ Decode token to extract role (helper)
+export const getUserRoleFromToken = () => {
+  const token = getToken();
+  if (!token) return null;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    return payload.role;
+  } catch (error) {
+    console.error("Token decode error:", error);
+    return null;
+  }
+};
+
+// ✅ Check if token exists
 export const isAuthenticated = () => {
   return !!getToken();
 };

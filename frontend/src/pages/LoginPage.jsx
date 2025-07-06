@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './LoginPage.css';
 import { login } from '../services/authService';
-import { getUserRoleFromToken } from '../services/jwt';
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
@@ -10,10 +9,8 @@ const LoginPage = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [e.target.name]: e.target.value
-    }));
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -22,13 +19,7 @@ const LoginPage = () => {
 
     try {
       await login(formData.username, formData.password);
-      const role = getUserRoleFromToken();
-
-      // Redirect based on role
-      if (role === 'ADMIN') navigate('/admin');
-      else if (role === 'DOCTOR') navigate('/doctor');
-      else if (role === 'PATIENT') navigate('/patient');
-      else navigate('/');
+      navigate('/dashboard'); // ✅ Central redirection
     } catch (err) {
       console.error(err);
       setError('Invalid credentials. Please try again.');
@@ -60,7 +51,6 @@ const LoginPage = () => {
 
       {error && <p className="error-message">{error}</p>}
 
-      {/* ✅ Sign-up link goes here inside the return */}
       <p style={{ marginTop: '10px' }}>
         Don't have an account? <Link to="/signup">Sign up</Link>
       </p>
