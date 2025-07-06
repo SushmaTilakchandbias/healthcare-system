@@ -18,10 +18,8 @@ export const getUserIdFromToken = () => {
   try {
     const base64Payload = token.split('.')[1];
     const payload = JSON.parse(atob(base64Payload));
-    console.log("Decoded JWT Payload:", payload); // 👈 DEBUG LOG
-    return payload.userId || payload.id || null;
+    return payload.sub || null;  // Assuming `sub` contains the user ID
   } catch (e) {
-    console.error("JWT decode error", e);
     return null;
   }
 };
