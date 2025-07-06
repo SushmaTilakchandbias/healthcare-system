@@ -17,12 +17,15 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     public Patient getPatientByUsername(String username) {
-        return patientRepository.findByUserUsername(username);
+        return patientRepository.findByUserUsername(username)
+                .orElse(null); // or throw a custom exception if needed
     }
+
     @Override
     public Optional<Patient> getPatientById(Long id) {
-        return patientRepository.findById(id);  // ✅ Already returns Optional
+        return patientRepository.findById(id);
     }
+
 
 
 }

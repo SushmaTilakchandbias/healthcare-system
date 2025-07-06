@@ -9,6 +9,7 @@ import com.healthcare.backend.service.MedicalRecordService;
 import com.healthcare.backend.service.PatientService;
 import com.healthcare.backend.service.PrescriptionService;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,16 +28,25 @@ public class PatientController {
 
     @GetMapping("/{id}/dashboard")
     public ResponseEntity<?> getPatientDashboard(@PathVariable Long id) {
-    	Optional<Patient> patient = patientService.getPatientById(id);
-    	if (patient.isEmpty()) return ResponseEntity.notFound().build();
-    	//Patient p = patient.get();
-        return ResponseEntity.ok(
-            new Object() {
-                public List<Appointment> appointments = appointmentService.getAppointmentsByPatientId(id);
-                public List<Prescription> prescriptions = prescriptionService.getByPatientId(id);
-                public List<MedicalRecord> records = medicalRecordService.getByPatient(id);
-            }
-        );
+        System.out.println("Received dashboard request for patient ID: " + id); // ✅ DEBUG LOG
+        Optional<Patient> patient = patientService.getPatientById(id);
+        if (patient.isEmpty()) {
+            System.out.println("❌ Patient not found");
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            return ResponseEntity.ok(
+                new HashMap<String, Object>() {{
+                    put("patient", patient.get());
+                    put("appointments", appointmentService.getAppointmentsByPatientId(id));
+                    put("prescriptions", prescriptionService.getByPatientId(id));
+                    put("records", medicalRecordService.getByPatient(id));
+                }}
+            );
+        } catch (Exception e) {
+            System.out.println("❌ Error fetching dashboard data: " + e.getMessage());
+            return ResponseEntity.internalServerError().body("Dashboard load failed");
+        }
     }
 }
-
