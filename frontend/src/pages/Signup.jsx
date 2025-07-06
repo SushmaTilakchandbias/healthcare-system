@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import './LoginPage.css';
+import { useNavigate, Link } from 'react-router-dom';
+import './SignupPage.css'; // Use the shared styling
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -19,7 +19,7 @@ const Signup = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
+    setFormData(prevData => ({
       ...prevData,
       [name]: value
     }));
@@ -48,7 +48,7 @@ const Signup = () => {
       setSuccess('Signup successful! Redirecting to login...');
       setTimeout(() => navigate('/login'), 1500);
     } catch (err) {
-      setError('Signup failed. Try again.');
+      setError('Signup failed. Username may already exist.');
     }
   };
 
@@ -56,13 +56,56 @@ const Signup = () => {
     <div className="login-container">
       <h2>Signup</h2>
       <form onSubmit={handleSubmit}>
-        <input name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
-        <input name="email" placeholder="Email" type="email" value={formData.email} onChange={handleChange} required />
-        <input name="phoneNumber" placeholder="Phone Number" value={formData.phoneNumber} onChange={handleChange} required />
-        <input name="password" placeholder="Password" type="password" value={formData.password} onChange={handleChange} required />
-        <input name="confirmPassword" placeholder="Re-enter Password" type="password" value={formData.confirmPassword} onChange={handleChange} required />
+        <input
+          className="input-field"
+          name="username"
+          placeholder="Username"
+          value={formData.username}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="input-field"
+          name="email"
+          placeholder="Email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="input-field"
+          name="phoneNumber"
+          placeholder="Phone Number"
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="input-field"
+          name="password"
+          placeholder="Password"
+          type="password"
+          value={formData.password}
+          onChange={handleChange}
+          required
+        />
+        <input
+          className="input-field"
+          name="confirmPassword"
+          placeholder="Re-enter Password"
+          type="password"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+          required
+        />
 
-        <select name="role" value={formData.role} onChange={handleChange}>
+        <select
+          className="input-field"
+          name="role"
+          value={formData.role}
+          onChange={handleChange}
+        >
           <option value="PATIENT">Patient</option>
           <option value="DOCTOR">Doctor</option>
         </select>
@@ -73,7 +116,7 @@ const Signup = () => {
       {error && <p className="error-message">{error}</p>}
       {success && <p className="success-message">{success}</p>}
 
-      <p>Already have an account? <a href="/login">Login</a></p>
+      <p>Already have an account? <Link to="/login">Login</Link></p>
     </div>
   );
 };

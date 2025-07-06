@@ -1,0 +1,101 @@
+/* Container Styling */
+.login-container {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 30px 25px;
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Headings */
+.login-container h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* Input & Select fields */
+.input-field,
+.login-container input,
+.login-container select {
+  width: 100%;
+  padding: 12px 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border 0.3s ease;
+}
+
+.login-container input:focus,
+.login-container select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* Button */
+.login-container button {
+  width: 100%;
+  padding: 12px;
+  background-color: #0052cc;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-container button:hover {
+  background-color: #003d99;
+}
+
+/* Success & Error messages */
+.success-message {
+  color: #28a745;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.error-message {
+  color: #dc3545;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+/* Login link */
+.login-container p {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.login-container a {
+  color: #0052cc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-container a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 480px) {
+  .login-container {
+    margin: 30px 15px;
+    padding: 20px;
+  }
+
+  .login-container h2 {
+    font-size: 24px;
+  }
+
+  .login-container button {
+    font-size: 15px;
+  }
+}
