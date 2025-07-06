@@ -18,11 +18,6 @@ export const login = async (username, password) => {
   }
 };
 
-// ✅ Logout: Remove token from localStorage
-export const logout = () => {
-  localStorage.removeItem(TOKEN_KEY);
-};
-
 // ✅ Retrieve token from localStorage
 export const getToken = () => {
   return localStorage.getItem(TOKEN_KEY);
@@ -45,4 +40,8 @@ export const getUserRoleFromToken = () => {
 // ✅ Check if token exists
 export const isAuthenticated = () => {
   return !!getToken();
+};
+
+export const logout = () => {
+  localStorage.removeItem('token');
 };

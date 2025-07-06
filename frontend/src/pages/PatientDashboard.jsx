@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import API from '../services/api';
 import { getUserIdFromToken } from '../services/jwt';
+import { logout } from '../services/authService';
+import { useNavigate } from 'react-router-dom';
+import './PatientDashboard.css'; 
 
 const PatientDashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // <-- useNavigate must be inside the component
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -41,7 +50,12 @@ const PatientDashboard = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h2>Welcome, {patient?.user?.firstName || patient?.user?.username || 'Patient'}!</h2>
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <h2>Welcome, {patient?.user?.firstName || patient?.user?.username || 'Patient'}!</h2>
+        <button onClick={handleLogout} style={{ padding: '8px 16px', background: '#f44336', color: '#fff', border: 'none', borderRadius: '5px' }}>
+          Logout
+        </button>
+      </div>
 
       <section>
         <h3>Patient Details</h3>
