@@ -6,12 +6,15 @@ const ProtectedRoute = ({ children, role }) => {
   const token = localStorage.getItem('token');
   const userRole = getUserRoleFromToken();
 
+  // 🚫 If no token, redirect to login
   if (!token) {
     return <Navigate to="/login" />;
   }
 
+  // ⚠️ If the route is restricted by role and user doesn't match, redirect
   if (role && userRole !== role) {
-    return <Navigate to="/login" />;
+    // You can customize this redirect
+    return <Navigate to="/dashboard" />;
   }
 
   return children;
