@@ -2,8 +2,14 @@ package com.healthcare.backend.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.healthcare.backend.model.User;
+import com.healthcare.backend.repository.UserRepository;
+
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Key;
@@ -14,20 +20,23 @@ import java.util.Date;
 public class JwtUtil {
 
     private Key key;
+    private final UserRepository userRepository;
 
-    // Inject Base64-encoded secret from application.properties
-    public JwtUtil(@Value("${app.jwtSecret}") String secret) {
+    @Autowired
+    public JwtUtil(@Value("${app.jwtSecret}") String secret, UserRepository userRepository) {
         byte[] decodedKey = Base64.getDecoder().decode(secret);
         this.key = Keys.hmacShaKeyFor(decodedKey);
+        this.userRepository = userRepository;
     }
 
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    // Generate JWT token
     public String generateToken(UserDetails userDetails) {
+        User user = userRepository.findByUsername(userDetails.getUsername()).orElseThrow();
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(user.getUsername())
+                .claim("role", user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(key, SignatureAlgorithm.HS256)

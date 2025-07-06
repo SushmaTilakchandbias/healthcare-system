@@ -16,5 +16,6 @@ public class AuthRequest {
 		this.password = password;
 	}
     
+	
     // Getters and Setters
 }
