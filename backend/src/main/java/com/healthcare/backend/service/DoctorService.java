@@ -9,15 +9,6 @@ import java.util.Optional;
 
 @Service
 public class DoctorService {
-
-    @Autowired
-    private DoctorRepository doctorRepository;
-
-    public Optional<Doctor> getDoctorByUsername(String username) {
-        return doctorRepository.findByUserUsername(username);
-    }
-
-    public Doctor saveDoctor(Doctor doctor) {
-        return doctorRepository.save(doctor);
-    }
+    @Autowired private DoctorRepository doctorRepository;
+    public Optional<Doctor> getDoctorById(Long id) { return doctorRepository.findById(id); }
 }

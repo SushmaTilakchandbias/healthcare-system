@@ -1,28 +1,27 @@
 package com.healthcare.backend.model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.*;
-
 @Entity
-@Table(name = "doctors")
 public class Doctor {
-
     @Id
-    private Long doctorId; // Matches user_id in Users
+    private Long id;
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "doctor_id")
+    @JoinColumn(name = "id")
     private User user;
 
     private String specialty;
     private String licenseNumber;
     private String clinicAddress;
-    private Double consultationFee;
-	public Long getDoctorId() {
-		return doctorId;
+    private BigDecimal consultationFee;
+	public Long getId() {
+		return id;
 	}
-	public void setDoctorId(Long doctorId) {
-		this.doctorId = doctorId;
+	public void setId(Long id) {
+		this.id = id;
 	}
 	public User getUser() {
 		return user;
@@ -48,13 +47,11 @@ public class Doctor {
 	public void setClinicAddress(String clinicAddress) {
 		this.clinicAddress = clinicAddress;
 	}
-	public Double getConsultationFee() {
+	public BigDecimal getConsultationFee() {
 		return consultationFee;
 	}
-	public void setConsultationFee(Double consultationFee) {
+	public void setConsultationFee(BigDecimal consultationFee) {
 		this.consultationFee = consultationFee;
 	}
     
-
-    // Getters and Setters
 }
