@@ -1,10 +1,19 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Dashboard.css';
 
 const PatientDashboard = () => {
+  const navigate = useNavigate();
+
   return (
-    <div style={{ padding: '2rem' }}>
-      <h2>Patient Dashboard</h2>
-      <p>Welcome, Patient! You can view your prescriptions and medical history here.</p>
+    <div className="dashboard-container">
+      <h2>Welcome, Patient</h2>
+      <div className="dashboard-grid">
+        <button onClick={() => navigate('/prescriptions')}>View Prescriptions</button>
+        <button onClick={() => navigate('/appointments')}>Appointments</button>
+        <button onClick={() => navigate('/medical-records')}>Medical Records</button>
+        <button onClick={() => navigate('/')}>Logout</button>
+      </div>
     </div>
   );
 };
