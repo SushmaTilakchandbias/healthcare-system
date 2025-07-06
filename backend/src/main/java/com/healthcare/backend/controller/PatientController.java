@@ -10,7 +10,7 @@ import com.healthcare.backend.service.PatientService;
 import com.healthcare.backend.service.PrescriptionService;
 
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,25 +28,20 @@ public class PatientController {
 
     @GetMapping("/{id}/dashboard")
     public ResponseEntity<?> getPatientDashboard(@PathVariable Long id) {
-        System.out.println("Received dashboard request for patient ID: " + id); // ✅ DEBUG LOG
-        Optional<Patient> patient = patientService.getPatientById(id);
-        if (patient.isEmpty()) {
-            System.out.println("❌ Patient not found");
-            return ResponseEntity.notFound().build();
-        }
+        Optional<Patient> patientOpt = patientService.getPatientById(id);
+        if (patientOpt.isEmpty()) return ResponseEntity.notFound().build();
 
-        try {
-            return ResponseEntity.ok(
-                new HashMap<String, Object>() {{
-                    put("patient", patient.get());
-                    put("appointments", appointmentService.getAppointmentsByPatientId(id));
-                    put("prescriptions", prescriptionService.getByPatientId(id));
-                    put("records", medicalRecordService.getByPatient(id));
-                }}
-            );
-        } catch (Exception e) {
-            System.out.println("❌ Error fetching dashboard data: " + e.getMessage());
-            return ResponseEntity.internalServerError().body("Dashboard load failed");
-        }
+        Patient patient = patientOpt.get();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("patient", patient);
+        response.put("appointments", appointmentService.getAppointmentsByPatientId(id));
+        response.put("prescriptions", prescriptionService.getByPatientId(id));
+        response.put("records", medicalRecordService.getByPatient(id));
+
+        return ResponseEntity.ok(response);
     }
-}
+
+    }
+
+
