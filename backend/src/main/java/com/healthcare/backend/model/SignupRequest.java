@@ -13,6 +13,11 @@ public class SignupRequest {
     private String emergencyContactNumber;
     private String medicalHistorySummary;
     private String allergies;
+    private String specialty;
+    private String licenseNumber;
+    private String clinicAddress;
+    private String consultationFee; // Accept as string, convert to BigDecimal later
+
     
 	public String getUsername() {
 		return username;
@@ -85,6 +90,30 @@ public class SignupRequest {
 	}
 	public void setAllergies(String allergies) {
 		this.allergies = allergies;
+	}
+	public String getSpecialty() {
+		return specialty;
+	}
+	public void setSpecialty(String specialty) {
+		this.specialty = specialty;
+	}
+	public String getLicenseNumber() {
+		return licenseNumber;
+	}
+	public void setLicenseNumber(String licenseNumber) {
+		this.licenseNumber = licenseNumber;
+	}
+	public String getClinicAddress() {
+		return clinicAddress;
+	}
+	public void setClinicAddress(String clinicAddress) {
+		this.clinicAddress = clinicAddress;
+	}
+	public String getConsultationFee() {
+		return consultationFee;
+	}
+	public void setConsultationFee(String consultationFee) {
+		this.consultationFee = consultationFee;
 	}
 
     
