@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState ,useEffect } from 'react';
+import { useNavigate, Link ,useLocation} from 'react-router-dom';
 import './LoginPage.css';
 import { login } from '../services/authService';
 
@@ -7,6 +7,13 @@ const LoginPage = () => {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.sessionExpired) {
+      setError('🔒 Session expired. Please login again.');
+    }
+  }, [location]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

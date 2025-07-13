@@ -1,19 +1,22 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { getUserRoleFromToken } from '../services/jwt';
+import { getUserRoleFromToken ,isTokenExpired} from '../services/jwt';
 
 const ProtectedRoute = ({ children, role }) => {
   const token = localStorage.getItem('token');
-  const userRole = getUserRoleFromToken();
+ 
 
-  // 🚫 If no token, redirect to login
-  if (!token) {
-    return <Navigate to="/login" />;
+  if (!token || isTokenExpired(token)) {
+    localStorage.removeItem('token'); // Clear expired token
+    alert('🔒 Session expired. Please login again.');
+   return <Navigate to="/login" state={{ sessionExpired: true }} replace />;
+
   }
 
-  // ⚠️ If the route is restricted by role and user doesn't match, redirect
+  const userRole = getUserRoleFromToken();
+
+  // If role is required and doesn't match, redirect to general dashboard
   if (role && userRole !== role) {
-    // You can customize this redirect
     return <Navigate to="/dashboard" />;
   }
 

@@ -1,3 +1,16 @@
+import {jwtDecode} from 'jwt-decode';
+
+export function isTokenExpired(token) {
+  if (!token) return true;
+
+  try {
+    const decoded = jwtDecode(token);
+    return decoded.exp * 1000 < Date.now(); // Token expired?
+  } catch (err) {
+    return true; // Token invalid
+  }
+}
+
 export const getUserRoleFromToken = () => {
   const token = localStorage.getItem('token');
   if (!token) return null;
